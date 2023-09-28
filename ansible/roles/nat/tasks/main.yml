@@ -1,0 +1,25 @@
+---
+- name: Set up NAT
+  block:
+    - name: Create a directory if it does not exist
+      ansible.builtin.file:
+        path: /etc/iptables
+        state: directory
+        mode: '0755'
+    
+    - name: Install IPtables-persistent
+      apt:
+        name: iptables-persistent
+        update_cache: yes
+        state: present
+      notify: persist iptables
+    
+    - name: copy iptables config
+      template:
+        src: templates/rules.v4
+        dest: /etc/iptables/rules.v4
+        owner: root
+        group: root
+        mode: 0600
+      notify: iptables systemd
+  when: (ansible_hostname == "inetRouter")

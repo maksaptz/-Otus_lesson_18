@@ -1,0 +1,11 @@
+---
+- hosts: all
+  become:
+    true
+  become_method:
+    sudo
+  roles:
+        - coreForward
+        - nat 
+        - routes
+        - reboot
